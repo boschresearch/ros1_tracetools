@@ -15,7 +15,7 @@
 
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>rostest</build_depend>
+  <test_depend>rostest</test_depend>
   
   <!-- this package does not list any dependencies, because most people 
        don't need tracing, and are just getting this is a dependency of
