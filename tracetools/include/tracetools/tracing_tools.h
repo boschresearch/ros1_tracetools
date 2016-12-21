@@ -1,8 +1,10 @@
-/*
+/**
  * tracing_tools.hpp
  *
  *  Created on: 04.08.2015
- *      Author: ingo
+ *      Author: Ingo Luetkebohle <ingo.luetkebohle@de.bosch.com>
+ *
+ * HINT: For user-defined tracing, you mostly need "trace_message_processed".
  */
 
 #ifndef CLIENTS_ROSCPP_INCLUDE_ROS_TRACING_TOOLS_H_
@@ -15,6 +17,16 @@ namespace ros {
 	class SubscriptionCallbackHelper;
 	typedef boost::shared_ptr<SubscriptionCallbackHelper> SubscriptionCallbackHelperPtr;
 
+	/**
+	 * Wrapper interface for tracing.
+	 *
+	 * For application developers, look at trace_message_processed mainly. If
+	 * you create your own threads (which, if you're using ROS, you can often
+	 * avoid, btw), also look at trace_task_init.
+	 *
+	 * Middleware developers might need all of it, but I've done the integration
+	 * with ROS Indigo already, and newer versions should be easy, too.
+	 */
 	class TracingTools {
 	public:
 		/// emit a tracepoint specifying a name for this thread.
@@ -29,25 +41,60 @@ namespace ros {
 		static const void* getCallbackFunction(const CallbackInterfacePtr& cb);
 		/// try to get a name for the function inside the CallbackInterfacePtr
 		static std::string getCallbackInfo(const CallbackInterfacePtr& cb);
+
 		/**
 		 * Emit tracing information linking the function ptr's name to the
 		 * given reference pointer.
 		 */
 		static void trace_name_info(const void* fun_ptr, const void* ref);
 
+		/**
+		* Mark the processing of a given "message". Note that, by using
+		* internal message-names, this also constitutes the main tracepoint
+		* for *user-defined tracing.*
+		*
+		* Hint: Every trace message also includes the timestamp of the
+		* trace function call with microsecond precision. If this timestamp
+		* is sufficient for you, the receipt_time_* args can be left empty.
+		*
+		* Hint2: The callback_ref argument is also necessary for disambiguation
+		* if the same message could be processed in multiple places. If
+		* the message-name itself is unique, you can omit it without impacting
+		* analysis.
+		*
+		* @param message_name Name of the "message"
+		* @param callback_ref Function pointer of the callback you're in
+		* @param receipt_time_sec Seconds part of the receive time
+		* @param receipt_time_nsec Nanoseconds part of the receive time
+		*/
 		static void trace_message_processed(const char* message_name,
 				const void* callback_ref, const uint32_t receipt_time_sec,
 				const uint32_t receipt_time_nsec);
 
-		//static void trace_name_info(const boost::bind_t& bound_func, const void* ref);
-		/** Emit tracing information that the callback has been called with
-		 * the given data.
-		 * */
-		/*static void trace_cb_call(const void* ptr_ref, const void* data, const
-				uint64_t trace_id);*/
-
+		/**
+		 * Trace the start of a function call through a function pointer.
+		 *
+		 * Note: If you internally wrap the user function in another function,
+		 * use trace_callback_wrapper to establish a correspondence between
+		 * this call and the user function.
+		 *
+		 * Note: This is intended for use by the middleware, which invokes
+		 * user-defined functions through function pointers.
+		 *
+		 * @param ptr_ref Function pointer reference.
+		 * @param data Function argument, if any. May be NULL.
+		 * @param trace_id A unique id for this call. Could be a sequence number.
+		 *
+		 * @see trace_callback_wrapper
+		 * @see trace_call_end
+		 */
 		static void trace_call_start(const void* ptr_ref, const void* data,
 				const uint64_t trace_id);
+		/**
+		 * Trace the end of a user-callback invocation.
+		 *
+		 * @see trace_call_start.
+		 */
 		static void trace_call_end(const void* ptr_ref, const void* data,
 				const uint64_t trace_id);
 

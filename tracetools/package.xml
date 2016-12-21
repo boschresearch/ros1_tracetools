@@ -15,6 +15,7 @@
 
 
   <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>rosdoc_lite</buildtool_depend>
   
   <!-- this package does not list any dependencies, because most people 
        don't need tracing, and are just getting this is a dependency of
@@ -23,7 +24,6 @@
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- Other tools can request additional information be placed here -->
-
+    <rosdoc config="rosdoc.yaml" />
   </export>
 </package>

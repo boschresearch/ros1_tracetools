@@ -1,0 +1,5 @@
+- builder: doxygen
+  name: C++ API
+  output_dir: doc
+  file_patterns: '*.c *.cpp *.h *.cc *.hh *.dox'
+  javadoc_autobrief: True
