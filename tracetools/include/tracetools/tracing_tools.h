@@ -11,15 +11,23 @@
 #include "ros/callback_queue_interface.h"
 
 namespace ros {
+	// forward declaration of a ros helper class
 	class SubscriptionCallbackHelper;
 	typedef boost::shared_ptr<SubscriptionCallbackHelper> SubscriptionCallbackHelperPtr;
 
 	class TracingTools {
 	public:
+		/// emit a tracepoint specifying a name for this thread.
+		/// also set's procname, and tries to create something that's
+		/// unique within 16 chars by truncating task_name if necessary
 		static void trace_task_init(const char* task_name, const char* owner=NULL);
+		// emit a tracepoint giving the node name and its version
+		/// also set's procname, but be aware that's limited to 16 chars
 		static void trace_node_init(const char* node_name, unsigned int roscpp_version);
 
+		/// get the function being pointed to by the CallbackInterfacePtr
 		static const void* getCallbackFunction(const CallbackInterfacePtr& cb);
+		/// try to get a name for the function inside the CallbackInterfacePtr
 		static std::string getCallbackInfo(const CallbackInterfacePtr& cb);
 		/**
 		 * Emit tracing information linking the function ptr's name to the

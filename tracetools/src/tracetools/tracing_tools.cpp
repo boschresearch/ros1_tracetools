@@ -4,18 +4,38 @@
 #endif
 #include <execinfo.h>
 #include <sstream>
+#include <sys/prctl.h>
 
 namespace ros {
 	void TracingTools::trace_task_init(const char* name, const char* owner) {
 #ifdef WITH_LTTNG
 		std::ostringstream oss;
-		oss << name << " of " << owner;
-		tracepoint(roscpp, task_start, oss.str().c_str());
+		oss << name << "_";
+		if(owner != NULL && strlen(owner) > 0) {
+			oss << owner;
+		} else {
+			char thread_name[256];
+			prctl(PR_GET_NAME, thread_name, NULL, NULL, NULL);
+			oss << thread_name;
+		}
+		std::string fqn(oss.str());
+		tracepoint(roscpp, task_start, fqn.c_str());
+
+		// check if we need to truncate, because name is usually not unique
+		// and we need the procname to disambiguate
+		if(strlen(name) > 10) {
+			oss.str(fqn.substr(0, 8));
+			// let prctl truncate the rest
+			oss << "_" <<  fqn.substr(strlen(name));
+			fqn = oss.str();
+		}
+		prctl(PR_SET_NAME, fqn.c_str(), NULL, NULL, NULL);
 #endif
 	}
 	void TracingTools::trace_node_init(const char* node_name, unsigned int roscpp_version) {
 #ifdef WITH_LTTNG
         tracepoint(roscpp, init_node, node_name, roscpp_version);
+        prctl(PR_SET_NAME, node_name, NULL, NULL, NULL);
 #endif
 	}
 	void TracingTools::trace_call_start(const void* ptr_ref, const void* data,
