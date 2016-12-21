@@ -12,9 +12,10 @@
 
 Generic tracing interface (with LTTng backend) and analysis tools.
 
-This package *optionally* depends upon LTTng. If you don't specify -DWITH_LTTNG=ON, your project won't actually
-generate tracing output.
+This package *optionally* depends upon LTTng. If you don't specify -DWITH_LTTNG=ON, your project won't actually generate tracing output. In this way, you can remove tracing, just by recompiling tracetools.
 
+
+For more information, including requirements and LTTng info, also see tracetools/README.md
 
 ## <a name="license"/>License and Organization
 
