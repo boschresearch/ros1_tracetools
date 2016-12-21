@@ -20,9 +20,9 @@ namespace ros {
 	/**
 	 * Wrapper interface for tracing.
 	 *
-	 * For application developers, look at trace_message_processed mainly. If
-	 * you create your own threads (which, if you're using ROS, you can often
-	 * avoid, btw), also look at trace_task_init.
+	 * For application developers, look at TracingTools::trace_message_processed
+	 * mainly. If you create your own threads (which, if you're using ROS, you
+	 * can often avoid, btw), also look at TracingTools::trace_task_init.
 	 *
 	 * Middleware developers might need all of it, but I've done the integration
 	 * with ROS Indigo already, and newer versions should be easy, too.
@@ -54,8 +54,10 @@ namespace ros {
 		* for *user-defined tracing.*
 		*
 		* Hint: Every trace message also includes the timestamp of the
-		* trace function call with microsecond precision. If this timestamp
-		* is sufficient for you, the receipt_time_* args can be left empty.
+		* trace function call with microsecond precision. If the time of
+		* processing and of receipt is almost the same, this is often
+		* sufficient. OTOH, if you process message at fixed rates, it can be
+		* useful.
 		*
 		* Hint2: The callback_ref argument is also necessary for disambiguation
 		* if the same message could be processed in multiple places. If
@@ -111,19 +113,25 @@ namespace ros {
 		static void trace_timer_scheduled(const void* callback_ref,
 				const void* timer_ref);
 
+		/// Trace meta-data on creation of a new connection
 		static void trace_new_connection(const char* local_hostport_arg,
 											  const char* remote_hostport_arg,
 											  const void* channel_ref_arg,
 											  const char* channel_type_arg,
 											  const char* name_arg,
 											  const char* data_type_arg);
+		/// Trace meta-data on creation of a publisher link (incoming topic connection)
 		static void trace_publisher_link_handle_message(const void* channel_ref_arg,
 														const void* buffer_ref_arg);
+		/// Trace a message being queue for publishing
 		static void trace_publisher_message_queued(const char* topic_arg,
 												   const void* buffer_ref_arg);
+		/// Trace metadata on a message being written to the socket
 		static void trace_subscriber_link_message_write(const void* message_ref_arg,
 														const void* channel_ref_arg);
+		/// Trace metadata on an incoming message being dropped (queue full, etc.)
 		static void trace_subscriber_link_message_dropped(const void* message_ref_arg);
+		/// Trace metadata on a message having been received and queued
 		static void trace_subscription_message_queued(const char* topic_arg,
 													  const void* buffer_ref_arg,
 													  const void* queue_ref_arg,
@@ -131,6 +139,7 @@ namespace ros {
 													  const void* message_ref_arg,
 													  int receipt_time_sec_arg,
 													  int receipt_time_nsec_arg);
+		/// Trace metadata on a new subscription callback
 		static void trace_subscriber_callback_added(const void* queue_ref_arg,
 													const void* callback_ref_arg,
 													const char* type_info_arg,
