@@ -1,18 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tracetools)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
-
 ## Check if we have catkin
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS roscpp roslib rostest)
 find_package(PkgConfig REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
-option(WITH_LTTNG "Include support for tracing with LTTng" OFF)
-if(WITH_LTTNG)
-pkg_check_modules(LTTNG REQUIRED lttng-ust)
+option(${PROJECT_NAME}_WITH_LTTNG "Include support for tracing with LTTng" OFF)
+if(${PROJECT_NAME}_WITH_LTTNG)
+	pkg_check_modules(LTTNG REQUIRED lttng-ust)
 endif()
 
 if(LTTNG_FOUND)
@@ -22,16 +20,16 @@ endif()
 
 # evaluate tracepoint definitions
 if(WITH_LTTNG)
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.c 
+	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.c 
 		COMMAND lttng-gen-tp tp_call.tp -o ../src/${PROJECT_NAME}/tp_call.c -o ../src/${PROJECT_NAME}/tp_call.h
 #		COMMAND mv tp_call.c tp_call.h ${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/lttng
 		DEPENDS ${CMAKE_SOURCE_DIR}/lttng/tp_call.tp
 )
-set(LTTNG_GENERATED 
-	${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.h 
-	${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.c
-)
+	set(LTTNG_GENERATED 
+		${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.h 
+		${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.c
+	)
 	message(STATUS ${LTTNG_GENERATED})
 endif()
 
@@ -52,7 +50,7 @@ catkin_python_setup()
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 	INCLUDE_DIRS include
-	LIBRARIES tracetools
+	LIBRARIES ${PROJECT_NAME}
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -63,7 +61,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include)
+include_directories(include ${catkin_INCLUDE_DIRS})
 if(WITH_LTTNG)
 	include_directories(${LTTNG_INCLUDEDIR})
 endif()
@@ -74,12 +72,12 @@ if(WITH_LTTNG)
   set(TT_SOURCES src/${PROJECT_NAME}/tp_call.c ${TT_SOURCES})
 endif()
 
-add_library(tracetools ${TT_SOURCES})
-
+add_library(${PROJECT_NAME} ${TT_SOURCES})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 if(WITH_LTTNG)
- 	link_directories(${LTTNG_LIBDIR})
-	target_link_libraries(tracetools ${LTTNG_LIBRARIES})
+	target_link_libraries(${PROJECT_NAME} ${LTTNG_LIBRARIES})
 endif()
+
 
 ## Declare a C++ executable
 # add_executable(tracetools_node src/tracetools_node.cpp)
@@ -108,7 +106,7 @@ install(PROGRAMS
 )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS tracetools
+install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -133,7 +131,6 @@ install(DIRECTORY include/${PROJECT_NAME}/
 #############
 
 if(CATKIN_ENABLE_TESTING)
-  find_package(rostest REQUIRED)
   add_rostest(test/test_experiment.test)
 endif()
 

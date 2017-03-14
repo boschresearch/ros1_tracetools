@@ -2,7 +2,7 @@
 <package format="2">
   <name>tracetools</name>
   <version>0.0.1</version>
-  <description>The tracetools package</description>
+  <description>Wrapper interface for tracing libraries</description>
 
   <maintainer email="ingo.luetkebohle@de.bosch.com">Ingo Luetkebohle</maintainer>
   <license>BIOS</license>
@@ -16,6 +16,11 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>rosdoc_lite</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>roslib</build_depend>
+  <build_depend>rostest</build_depend>
+  <exec_depend>roscpp</exec_depend>
+  <test_depend>rostest</test_depend>
   
   <!-- this package does not list any dependencies, because most people 
        don't need tracing, and are just getting this is a dependency of
