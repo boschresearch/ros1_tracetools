@@ -9,7 +9,7 @@ find_package(PkgConfig REQUIRED)
 # find_package(Boost REQUIRED COMPONENTS system)
 
 option(${PROJECT_NAME}_WITH_LTTNG "Include support for tracing with LTTng" OFF)
-if(${PROJECT_NAME}_WITH_LTTNG)
+if(WITH_LTTNG)
 	pkg_check_modules(LTTNG REQUIRED lttng-ust)
 endif()
 
