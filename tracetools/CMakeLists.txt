@@ -8,7 +8,7 @@ find_package(PkgConfig REQUIRED)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
-option(${PROJECT_NAME}_WITH_LTTNG "Include support for tracing with LTTng" OFF)
+option(WITH_LTTNG "Include support for tracing with LTTng" OFF)
 if(WITH_LTTNG)
 	pkg_check_modules(LTTNG REQUIRED lttng-ust)
 endif()
@@ -78,6 +78,7 @@ if(WITH_LTTNG)
 	target_link_libraries(${PROJECT_NAME} ${LTTNG_LIBRARIES})
 endif()
 
+add_executable(${PROJECT_NAME}_status src/${PROJECT_NAME}/status.cpp)
 
 ## Declare a C++ executable
 # add_executable(tracetools_node src/tracetools_node.cpp)
