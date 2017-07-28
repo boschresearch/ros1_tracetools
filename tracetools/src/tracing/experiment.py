@@ -73,10 +73,16 @@ class TraceExperiment(object):
             cmd.append(session_name)
 
         create_proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True, **kwargs)
-        stdoutdata, _ = create_proc.communicate()
+        stdoutdata, stderr = create_proc.communicate()
         # at least in current versions of lttng, the last piece of output from create is the session data directory
-        self._session_data_dir = stdoutdata.split()[-1]
-
+        outputs = stdoutdata.split()
+        self._session_data_dir = outputs[-1]
+        if session_name is None:
+            session_name = outputs[1]
+        if stderr is not None and len(stderr):
+            print(stderr)
+            return None
+        
         self._session_name = session_name
         for event in self._events:
             subprocess.check_call(["lttng", "enable-event", "-u", event], stdout=subprocess.PIPE)
@@ -99,7 +105,11 @@ class TraceExperiment(object):
         try:
             subprocess.check_call(["lttng", "start"])
             for i in range(0, repeats):
-                subprocess.check_call(self._exp_args, cwd=self._working_directory)
+                proc = subprocess.Popen(self._exp_args, cwd=self._working_directory)
+                stdout, stderr = proc.communicate()
+                if stderr is not None and len(stderr):
+                    print("Output", stderr)
+                    return None
             subprocess.check_call(["lttng", "stop"])
         except subprocess.CalledProcessError as e:
             print(e)
