@@ -86,6 +86,7 @@ class TraceExperiment(object):
         self._session_name = session_name
         for event in self._events:
             subprocess.check_call(["lttng", "enable-event", "-u", event], stdout=subprocess.PIPE)
+        
         for ctx_event in self._context:
             subprocess.check_call(["lttng", "add-context", "-u", "-t", ctx_event], stdout=subprocess.PIPE)
 

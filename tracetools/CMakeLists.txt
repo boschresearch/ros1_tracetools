@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(tracetools)
 
 ## Check if we have catkin
-find_package(catkin REQUIRED COMPONENTS roscpp roslib rostest)
+find_package(catkin REQUIRED COMPONENTS roscpp)
 find_package(PkgConfig REQUIRED)
 
 ## System dependencies are found with CMake's conventions
