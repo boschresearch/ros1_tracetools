@@ -29,6 +29,8 @@ namespace ros {
 	 */
 	class TracingTools {
 	public:
+		/// report lttng compile status
+		static bool lttng_status() throw();
 		/// emit a tracepoint specifying a name for this thread.
 		/// also set's procname, and tries to create something that's
 		/// unique within 16 chars by truncating task_name if necessary

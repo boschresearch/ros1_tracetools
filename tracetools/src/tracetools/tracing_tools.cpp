@@ -7,6 +7,13 @@
 #include <sys/prctl.h>
 
 namespace ros {
+	bool TracingTools::lttng_status() throw() {
+#ifdef WITH_LTTNG
+		return true;
+#else
+		return false;
+#endif
+	}
 	void TracingTools::trace_task_init(const char* name, const char* owner) {
 #ifdef WITH_LTTNG
 		std::ostringstream oss;
