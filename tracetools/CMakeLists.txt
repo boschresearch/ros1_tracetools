@@ -73,12 +73,25 @@ if(WITH_LTTNG)
 endif()
 
 add_library(${PROJECT_NAME} ${TT_SOURCES})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+# we do NOT want to link against catkin_LIBRARIES, those are only for tests
+target_link_libraries(${PROJECT_NAME})
 if(WITH_LTTNG)
 	target_link_libraries(${PROJECT_NAME} ${LTTNG_LIBRARIES})
 endif()
 
+# status executable
 add_executable(${PROJECT_NAME}_status src/${PROJECT_NAME}/status.cpp)
+add_dependencies(${PROJECT_NAME}_status ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_status
+  ${PROJECT_NAME}
+)
+
+# test trace executable
+add_executable(${PROJECT_NAME}_test src/${PROJECT_NAME}/test.cpp)
+add_dependencies(${PROJECT_NAME}_test ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_test
+  ${PROJECT_NAME}
+)
 
 ## Declare a C++ executable
 # add_executable(tracetools_node src/tracetools_node.cpp)
