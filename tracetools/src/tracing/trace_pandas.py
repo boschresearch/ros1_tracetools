@@ -6,8 +6,8 @@ import pickle
 import pandas as pd
 import subprocess
 import re
-from lttng_model import *
-from ros_mapping import map_roscpp
+from .lttng_model import *
+from .ros_mapping import map_roscpp
 
 
 class TracePD:

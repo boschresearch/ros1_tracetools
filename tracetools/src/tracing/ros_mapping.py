@@ -3,7 +3,7 @@ import sys
 import subprocess
 import re
 
-from lttng_model import *
+from .lttng_model import *
 
 
 def split_function_name(function_name, element=None):
