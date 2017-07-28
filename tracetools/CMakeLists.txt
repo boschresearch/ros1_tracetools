@@ -132,8 +132,12 @@ install(DIRECTORY include/${PROJECT_NAME}/
 #############
 
 if(CATKIN_ENABLE_TESTING)
-  add_rostest(test/test_experiment.test)
+  #
 endif()
 
+# test LTTNG works
+if(WITH_LTTNG)
+	add_test(NAME test_event COMMAND rosrun tracetools event_test.sh)
+endif(WITH_LTTNG)
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
