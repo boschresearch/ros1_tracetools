@@ -140,17 +140,21 @@ class Mapper(object):
         if key not in self.known_callbacks:
             key = self.timer_map.get(key, key)
         if key in self.known_callbacks:
-            start = self.start_call[key]
-            duration = md.timestamp - start
-            cycles = get_cycles(e) - self.start_cycles[key]
-            self.invocations.append(InvocationInfo(md, get_callback(e), duration, cycles))
-
-            # cleanup
-            del self.start_call[key]
-            del self.start_cycles[key]
             try:
-                del self.timer_map[key]
-            except:
+                start = self.start_call[key]
+                duration = md.timestamp - start
+                cycles = get_cycles(e) - self.start_cycles[key]
+                self.invocations.append(InvocationInfo(md, get_callback(e), duration, cycles))
+
+                # cleanup
+                del self.start_call[key]
+                del self.start_cycles[key]
+                try:
+                    del self.timer_map[key]
+                except:
+                    pass
+            except KeyError as e:
+                #print(e)                
                 pass
 
     def handle_name_info(self, e, md):
