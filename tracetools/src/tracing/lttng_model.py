@@ -1,7 +1,4 @@
-from IPython.testing.tests.test_decorators import call_doctest_bad
-
-
-class TraceMetaData:
+class TraceMetaData(object):
     process_id = None
     task_id = None
     node_name = None
@@ -13,8 +10,7 @@ class TraceMetaData:
         self.task_id = task_id
         self.timestamp = timestamp
 
-
-class TraceEvent:
+class TraceEvent(object):
     def __init__(self, metadata):
         self.metadata = metadata
 

@@ -10,7 +10,7 @@ from .lttng_model import *
 from .ros_mapping import map_roscpp
 
 
-class TracePD:
+class TracePD(object):
     functions = None
     invocations = None
     tasks = None
