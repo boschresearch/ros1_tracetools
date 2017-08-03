@@ -118,6 +118,16 @@ def merge_names(trace_pd):
                     right_on=("callback", "task_id"), how="left", sort=False).\
         merge(trace_pd.tasks, left_on="task_id", right_on="task_id", how="left", sort=False)
 
+def dump(filename, trace_pd):
+    """Dump the given trace_pd into the specified file
+    :param filename: File to write it
+    :param trace_pd: Data to write. Should be a single TracePD instance.
+    """
+    with open(filename, "wb") as f:
+        pickler = pickle.Pickler(f)
+        pickler.dump(trace_pd)
+
+
 
 def task_statistics(trace_pd):
     """
