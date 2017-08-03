@@ -31,6 +31,24 @@ class TraceEvent(object):
         return self.metadata.timestamp
 
 
+class ActionIntervalData(object):
+    """Captures the extent of actions executed by the system"""
+    def __init__(self, start, end, action, result):
+        """
+        :param md: Event metadata
+        :param start: Start timestamp
+        :param end: End timestamp
+        :param action: Name of the action (its type), should be the same for grouping.
+        :param result: True for success, false otherwise
+        :param details: If specified, the instance-specific details of the action.
+        """
+
+        self.start = start
+        self.end = end
+        self.action = action
+        self.result = result
+
+
 class TaskInfo(TraceEvent):
     task_name = None
 
@@ -132,16 +150,17 @@ class TraceInfo:
     mtrace = None
     delays = None
 
-    def __init__(self, functions, invocations, tasks, runtime, message_trace, delays):
+    def __init__(self, functions, invocations, tasks, runtime, message_trace, delays, actions=None):
         self.functions = functions
         self.invocations = invocations
         self.tasks = tasks
         self.runtime = runtime
         self.mtrace = message_trace
         self.delays = delays
+        self.actions = actions
 
     def __iter__(self):
-        return (self.functions, self.invocations, self.tasks, self.runtime, self.mtrace).__iter__()
+        return (self.functions, self.invocations, self.tasks, self.runtime, self.mtrace, self.actions).__iter__()
 
 
 def load_pickle(filename, map_fn, filter_fn=None):

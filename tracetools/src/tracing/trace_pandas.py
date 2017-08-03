@@ -18,13 +18,14 @@ class TracePD(object):
     mtrace = None
     delays = None
 
-    def __init__(self, functions, invocations, tasks, runtime, message_trace, delays):
+    def __init__(self, functions, invocations, tasks, runtime, message_trace, delays, actions=None):
         self.functions = functions
         self.invocations = invocations
         self.tasks = tasks
         self.runtime = runtime
         self.mtrace = message_trace
         self.delays = delays
+        self.actions = actions
 
     def by_node(self, nodename):
         task_id = self.tasks.loc
@@ -96,6 +97,15 @@ def ti2pd(ti):
     }, index=delays_timestamps)
 
     return TracePD(functions_df, invocations_df, tasks_df, runtime_df, mtrace_df, delays_df)
+
+
+def actions_to_df(action_infos):
+    return pd.DataFrame(data={
+        'action': [t.action for t in action_infos],
+        'starts': [pd.Timestamp(t.start) for t in action_infos],
+        'duration': [pd.Timedelta(t.end - t.start) for t in action_infos],
+        'result': [t.result for t in action_infos],
+    })
 
 
 def pickle2pd(filename, map_fn):
