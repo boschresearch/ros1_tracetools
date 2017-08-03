@@ -94,19 +94,22 @@ class InvocationInfo(TraceEvent):
     duration = None
     cycles = None
 
-    def __init__(self, md, cb_ref, duration, cycles):
+    def __init__(self, md, cb_ref, duration, cycles, trace_id):
         """
 
         :param start:
         :param cb_ref:
         :param duration:
         :param cycles:
+        :param trace_id: Identifier to distinguish to logically separate invocations of the same
+            function, e.g. in separate threads.
         :return:
         """
         TraceEvent.__init__(self, md)
         self.cb_ref = cb_ref
         self.duration = duration
         self.cycles = cycles
+        self.trace_id = trace_id
 
 
 class MessageTraceInfo(TraceEvent):

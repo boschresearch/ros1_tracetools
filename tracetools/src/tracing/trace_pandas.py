@@ -56,7 +56,8 @@ def ti2pd(ti):
         'task_id': invocation_tasks,
         'callback': invocation_cbs,
         'duration': [t.duration for t in ti.invocations],
-        'cycles': [t.cycles for t in ti.invocations]
+        'cycles': [t.cycles for t in ti.invocations],
+        'trace_id': [t.trace_id for t in ti.invocations],
     }, index=invocations_timestamps)
 
     task_nodes = [t.node_name for t in ti.tasks]

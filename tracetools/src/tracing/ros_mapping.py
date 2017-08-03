@@ -113,7 +113,8 @@ class Mapper(object):
             start = self.start_call[key]
             duration = md.timestamp - start
             cycles = get_cycles(e) - self.start_cycles[key]
-            self.invocations.append(InvocationInfo(md, get_callback(e), duration, cycles))
+            trace_id =  get_trace_id(e)
+            self.invocations.append(InvocationInfo(md, get_callback(e), duration, cycles, trace_id))
 
             # cleanup
             del self.start_call[key]
@@ -144,7 +145,8 @@ class Mapper(object):
                 start = self.start_call[key]
                 duration = md.timestamp - start
                 cycles = get_cycles(e) - self.start_cycles[key]
-                self.invocations.append(InvocationInfo(md, get_callback(e), duration, cycles))
+                trace_id =  get_trace_id(e)
+                self.invocations.append(InvocationInfo(md, get_callback(e), duration, cycles, trace_id))
 
                 # cleanup
                 del self.start_call[key]
@@ -227,6 +229,14 @@ def get_instructions(e):
 def get_t_name(e):
     return e['task_name']
 
+def get_trace_id(e):
+    tid = 0
+    if 'trace_id' in e:
+        tid =  e['trace_id']
+    elif 'tracing_id' in e: # so much for consistency...
+        tid = e['tracing_id'] 
+
+    return tid
 
 def get_m_name(e):
     if get_name(e) == 'roscpp:subscriber_callback_added':
