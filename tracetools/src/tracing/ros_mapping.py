@@ -95,6 +95,9 @@ class Mapper(object):
 
     def create_trace_info(self):
         #print([(key.element['procname'], key.element['callback_ref']) for key in self.not_found])
+        num_unfinished = len(self.start_call)
+        if num_unfinished > 0:
+            print("%d unfinished invocations ignored" % num_unfinished)
         return TraceInfo(self.names, self.invocations, self.tasks, self.runtime, self.mtrace, self.delays)
 
     def handle_subscriber_callback_start(self, e, md):
@@ -130,11 +133,21 @@ class Mapper(object):
         if key not in self.known_callbacks:
             key = self.timer_map.get(key, key)
 
-        if key in self.known_callbacks:
-            self.start_call[key] = md.timestamp
-            self.start_cycles[key] = get_cycles(e)
-        else:
-            self.not_found.add(key)
+        # handle functions we didn't get name_info for
+        if key not in self.known_callbacks:
+            if get_trace_id(e) != 0:
+                cb_ref = get_callback(e)
+                self._add_fi(e, md, "%s::%d" % (e['procname'], cb_ref), cb_ref, key)
+            else:
+                pass#self.not_found.add(e)
+                
+        self.start_call[key] = md.timestamp
+        self.start_cycles[key] = get_cycles(e)
+        
+    def _add_fi(self, e, md, function_name, cb_ref, key):
+        fi = FunctionInfo(md, function_name, cb_ref)
+        self.names.append(fi)
+        self.known_callbacks.add(key)
 
     def handle_callback_end(self, e, md):
         key = FunctionKey(e)
@@ -158,11 +171,12 @@ class Mapper(object):
             except KeyError as e:
                 #print(e)                
                 pass
+        else:
+            #print("Found unknown callback %s" % str(e))
+            pass
 
     def handle_name_info(self, e, md):
-        fi = FunctionInfo(md, split_function_name(get_m_name(e)), get_callback(e))
-        self.names.append(fi)
-        self.known_callbacks.add(FunctionKey(e))
+        self._add_fi(e, md, split_function_name(get_m_name(e)), get_callback(e), FunctionKey(e))        
 
     def handle_task_start(self, e, md):
         self.tasks.append(TaskInfo(md, get_t_name(e)))
