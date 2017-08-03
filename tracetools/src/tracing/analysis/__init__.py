@@ -27,7 +27,7 @@ def select_invocations(pd_df, fn_selector=lambda _: True, fields=("duration", "c
     return pd_df.functions.loc[cbs].merge(pd_df.invocations, on='callback').\
         loc[:,("function_name", ) + fields]
 
-def fn_durations(fi_pd, stats=[np.median, np.std], sort_key=("duration", "median")):
+def fn_durations(fi_pd, stats=[np.sum, np.median, np.std], sort_key=("duration", "sum")):
     """Compute median and standard deviation of aggregated invocation data."""
     return fi_pd.groupby('function_name').agg(stats).\
         sort_values(by=sort_key, ascending=False)
