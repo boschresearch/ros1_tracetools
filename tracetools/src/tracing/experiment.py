@@ -30,7 +30,9 @@ ROSCPP_TRACE_EVENTS = [
     "roscpp:trace_link",
     "roscpp:ptr_call",
     "roscpp:timer_scheduled",
-    "roscpp:queue_delay"
+    "roscpp:queue_delay",
+    "lttng_ust_cyg_profile:func_entry",
+    "lttng_ust_cyg_profile:func_exit",
 ]
 
 STD_CONTEXT = [
@@ -42,6 +44,15 @@ STD_CONTEXT = [
     "perf:thread:cpu-cycles"
 ]
 
+PARANOIA_CONFIG = "/proc/sys/kernel/perf_event_paranoid"
+
+def check_trace_permissions():
+    with open(PARANOIA_CONFIG, 'r') as f:
+        level = int(f.read())
+        if level > 0:
+            return (False, "Kernel does not allow userspace tracing, level" \
+                " is %d, needs to be <= 0. Modify '%s' to change." % (level, PARANOIA_CONFIG))
+        return True, "Ok, trace config level is %d" % level
 
 class TraceExperiment(object):
     def __init__(self, exp_args, userspace_events, context=STD_CONTEXT, meta_events=ROSCPP_META_EVENTS, working_directory=None):
@@ -61,6 +72,7 @@ class TraceExperiment(object):
         self._session_data_dir = None
         self._working_directory = working_directory if working_directory is not None else os.path.dirname(exp_args[0])
 
+
     def create(self, session_name=None, **kwargs):
         """
         Set up a new lttng session.
@@ -68,6 +80,10 @@ class TraceExperiment(object):
         :param kwargs: Any keyword arguments will be passed on to the subprocess call.
         :return: The session name
         """
+        result, msg = check_trace_permissions()
+        if not result:
+            raise Exception(msg)
+
         cmd = ["lttng", "create"]
         if session_name is not None:
             cmd.append(session_name)
