@@ -149,10 +149,24 @@ namespace ros {
 #endif
 	}
 
+	void TracingTools::trace_timer_added(const void* fun_ptr,
+					const char* type_info, int period_sec, int period_nsec)	{
+#ifdef WITH_LTTNG
+		tracepoint(roscpp, timer_added, fun_ptr, get_symbol(const_cast<void*>(fun_ptr)).c_str(),
+				type_info, period_sec, period_nsec);
+#endif
+	}
+
 	void TracingTools::trace_timer_scheduled(const void* callback_ref,
 					const void* timer_ref) {
 #ifdef WITH_LTTNG
 		tracepoint(roscpp, timer_scheduled, callback_ref, timer_ref);
+#endif
+	}
+
+	void TracingTools::trace_time_sleep(const void* callback_ref, int sleep_sec, int sleep_nsec) {
+#ifdef WITH_LTTNG
+		tracepoint(roscpp, time_sleep, callback_ref, sleep_sec, sleep_nsec);
 #endif
 	}
 

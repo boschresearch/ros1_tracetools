@@ -30,6 +30,7 @@ ROSCPP_TRACE_EVENTS = [
     "roscpp:trace_link",
     "roscpp:ptr_call",
     "roscpp:timer_scheduled",
+    "roscpp:time_sleep",
     "roscpp:queue_delay",
     "lttng_ust_cyg_profile:func_entry",
     "lttng_ust_cyg_profile:func_exit",

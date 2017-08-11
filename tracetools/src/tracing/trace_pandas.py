@@ -43,6 +43,7 @@ def ti2pd(ti):
         'function_name': [t.function_name for t in ti.functions],
         'callback': function_addrs,
         'task_id': function_tasks,
+        'trigger': [t.trigger for t in ti.functions]
     }, index=[function_tasks, function_addrs])
 
     # filter out functions where we didn't get a meaningful name

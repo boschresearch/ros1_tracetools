@@ -3,6 +3,7 @@ __author__ = 'Luetkebohle Ingo (CR/AEX3)'
 
 import numpy as np
 import pandas as pd
+import time
 from tracing.trace_pandas import ti2pd
 from tracing.ros_mapping import map_roscpp
 import pickle

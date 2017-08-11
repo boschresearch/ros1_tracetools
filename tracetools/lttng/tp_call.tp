@@ -84,6 +84,21 @@ TRACEPOINT_EVENT(
 )
 TRACEPOINT_EVENT(
 	roscpp,
+	time_sleep,
+	TP_ARGS(
+		const void*, callback_ref_arg,
+		int, sleep_sec_arg,
+		int, sleep_nsec_arg
+	),
+	TP_FIELDS(
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+		ctf_integer(int, sleep_sec, sleep_sec_arg)
+		ctf_integer(int, sleep_nsec, sleep_nsec_arg)
+	)
+)
+
+TRACEPOINT_EVENT(
+	roscpp,
 	timer_scheduled,
 	TP_ARGS(
 		const void*, callback_queue_cb_ref_arg,

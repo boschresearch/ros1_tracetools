@@ -97,14 +97,26 @@ class RuntimeCPUInfo(TraceEvent):
 class FunctionInfo(TraceEvent):
     function_name = None
     cb_ref = None
+    trigger = None
 
-    def __init__(self, md, function_name, cb_ref):
+    def __init__(self, md, function_name, cb_ref, trigger='unspecified'):
+        """
+        :param trigger: The kind of trigger -- use "time" for timers or "data" for subscriptions
+        """
         TraceEvent.__init__(self, md)
         self.function_name = function_name
         self.cb_ref = cb_ref
+        self.trigger = trigger
+
+    def __eq__(self, other):
+        return hasattr(other, 'function_name') and hasattr(other, 'cb_ref') and \
+            self.function_name == other.function_name and self.cb_ref == other.cb_ref
+
+    def __hash__(self):
+        return hash((self.function_name, self.cb_ref, self.trigger))
 
     def __repr__(self):
-        return "Function(name=%s, cb_ref=%s)" % (self.function_name, self.cb_ref)
+        return "Function(name=%s, cb_ref=%s, trigger=%s)" % (self.function_name, self.cb_ref, self.trigger)
 
 
 class InvocationInfo(TraceEvent):
