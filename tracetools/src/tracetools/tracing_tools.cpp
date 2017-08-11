@@ -5,6 +5,7 @@
 #include <execinfo.h>
 #include <sstream>
 #include <sys/prctl.h>
+#include "ros/callback_queue_interface.h"
 
 namespace ros {
 	bool TracingTools::lttng_status() throw() {

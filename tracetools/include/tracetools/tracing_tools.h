@@ -10,11 +10,16 @@
 #ifndef CLIENTS_ROSCPP_INCLUDE_ROS_TRACING_TOOLS_H_
 #define CLIENTS_ROSCPP_INCLUDE_ROS_TRACING_TOOLS_H_
 
-#include "ros/callback_queue_interface.h"
+#include <stdint.h>
+#include <boost/shared_ptr.hpp>
+
+//#include "ros/callback_queue_interface.h"
 
 namespace ros {
 	// forward declaration of a ros helper class
 	class SubscriptionCallbackHelper;
+	class CallbackInterface;
+	typedef class boost::shared_ptr<ros::CallbackInterface> CallbackInterfacePtr;
 	typedef boost::shared_ptr<SubscriptionCallbackHelper> SubscriptionCallbackHelperPtr;
 
 	/**
