@@ -40,7 +40,6 @@ STD_CONTEXT = [
     "vpid",
     "procname",
     "vtid",
-    "perf:thread:instructions",
     "perf:thread:cycles",
     "perf:thread:cpu-cycles"
 ]
