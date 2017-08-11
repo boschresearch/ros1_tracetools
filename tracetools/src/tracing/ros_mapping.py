@@ -33,7 +33,7 @@ class FunctionKey(object):
                self.process_id == other.process_id and self.callback_ref == other.callback_ref
 
     def __repr__(self):
-        return "FnKey(pid=%d, cb=%d)" % (self.process_id, self.callback_ref)
+        return "FnKey(pid=%d, cb=%x)" % (self.process_id, self.callback_ref)
 
 
 class Mapper(object):
