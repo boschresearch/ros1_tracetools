@@ -258,6 +258,24 @@ namespace ros {
 #endif
 }
 
+void TracingTools::trace_subscriber_call_start(const std::string& topic,
+					const void* queue_ref, const void* callback_ref,
+					const void* message_ref,
+					int receipt_time_sec, int receipt_time_nsec) {
+#ifdef WITH_LTTNG
+	tracepoint(roscpp, subscriber_callback_start, topic.c_str(), 0, queue_ref, callback_ref, message_ref, receipt_time_sec, receipt_time_nsec);
+#endif
+}
+void TracingTools::trace_subscriber_call_end(const std::string& topic,
+					const void* queue_ref, const void* callback_ref,
+					const void* message_ref,
+					int receipt_time_sec, int receipt_time_nsec) {
+#ifdef WITH_LTTNG
+	tracepoint(roscpp, subscriber_callback_end, topic.c_str(), 0, queue_ref, callback_ref, message_ref, receipt_time_sec, receipt_time_nsec);
+#endif
+}
+
+
 	void TracingTools::trace_queue_delay(const char* queue_name,
 					const void* ptr_ref, const void* data,
 					const uint32_t entry_time_sec, const uint32_t entry_time_nsec)

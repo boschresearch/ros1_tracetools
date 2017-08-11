@@ -86,9 +86,10 @@ namespace ros {
 		/**
 		 * Trace the start of a function call through a function pointer.
 		 *
-		 * Note: If you internally wrap the user function in another function,
-		 * use trace_callback_wrapper to establish a correspondence between
-		 * this call and the user function.
+		 * Note: This should only be used if the exact function pointer given
+		 * here has been registered using trace_name_info. For the ROS subscription
+		 * queue, which creates new callback objects on every message, use
+		 * trace_subscriber_callback_start instead
 		 *
 		 * Note: This is intended for use by the middleware, which invokes
 		 * user-defined functions through function pointers.
@@ -102,6 +103,35 @@ namespace ros {
 		 */
 		static void trace_call_start(const void* ptr_ref, const void* data,
 				const uint64_t trace_id);
+
+		/**
+		 * Trace the invocation of a previously queued subscriber call.
+		 *
+		 * Note: This is intended for use by the middleware, which invokes
+		 * user-defined functions through function pointers.
+		 *
+		 * @param topic The topic the callback relates to
+		 * @param queue_ref The wrapper object referenced in trace_subscriber_callback_added
+		 * @param callback_ref The target function pointer
+		 * @param message_ref The message (should match the id in trace_subscription_message_queued)
+		 * @param receipt_time_sec Second part of receiption_time
+		 * @param receipt_time_nsec Nanosecond part of receiption_time
+		 *
+		 * @see trace_subscriber_callback_added
+		 * @see trace_subscription_message_queued
+		 */
+		static void trace_subscriber_call_start(const std::string& topic,
+				const void* queue_ref, const void* callback_ref,
+				const void* message_ref,
+				int receipt_time_sec, int receipt_time_nsec);
+
+		/**
+		 * Marks the end of the call, same arguments as above.
+		 * */
+		static void trace_subscriber_call_end(const std::string& topic,
+						const void* queue_ref, const void* callback_ref,
+						const void* message_ref,
+						int receipt_time_sec, int receipt_time_nsec);
 		/**
 		 * Trace the end of a user-callback invocation.
 		 *
