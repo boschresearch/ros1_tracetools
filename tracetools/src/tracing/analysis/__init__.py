@@ -8,17 +8,20 @@ from tracing.trace_pandas import ti2pd
 from tracing.ros_mapping import map_roscpp
 import pickle
 
+
 def load(filename):
     with open(filename, "rb") as f:
         up = pickle.Unpickler(f)
         return up.load()
-    
+
+
 def load_as_pd(filename):
     data = load(filename)
     if "pd.pickle" in filename:
         return data
     else:
         return ti2pd(map_roscpp(data))    
+
 
 def select_invocations(pd_df, fn_selector=lambda _: True):
     """

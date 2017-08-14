@@ -10,6 +10,7 @@ class TraceMetaData(object):
         self.task_id = task_id
         self.timestamp = timestamp
 
+
 class TraceEvent(object):
     def __init__(self, metadata):
         self.metadata = metadata
