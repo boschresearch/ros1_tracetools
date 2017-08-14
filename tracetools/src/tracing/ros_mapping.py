@@ -224,8 +224,8 @@ class Mapper(object):
             start = self.start_call[key]
             duration = md.timestamp - start
             cycles = get_cycles(e) - self.start_cycles[key]
-            trace_id =  get_trace_id(e)
-            self.invocations.append(InvocationInfo(md, get_callback(e), duration, cycles, trace_id))
+            trace_id = get_trace_id(e)
+            self.invocations.append(InvocationInfo(md, key.callback_ref, duration, cycles, trace_id))
 
             # cleanup
             del self.start_call[key]
