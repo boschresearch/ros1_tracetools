@@ -89,6 +89,44 @@ class Mapper(object):
         }
         self.not_found = set()
 
+    def _add_fi(self, e, md, function_name, cb_ref, key, trigger=None):
+        if trigger is None:
+            trigger = 'unspecified'
+            if e['_name'] == "roscpp:subscriber_callback_added":
+                trigger = 'data'
+            elif e['_name'] == "roscpp:timer_added":
+                trigger = 'time'
+
+        # print(e['_name'], trigger)
+        fi = FunctionInfo(md, function_name, cb_ref, trigger)
+        if key in self.known_callbacks:
+            idx = -1
+            try:
+                idx = self.names.index(fi)
+            except ValueError:
+                for i, v in enumerate(self.names):
+                    if v.cb_ref == cb_ref:
+                        idx = i
+                        break
+
+            if idx != -1:
+                if self.names[idx].trigger == 'unspecified':
+                    self.names[idx].trigger = trigger
+                name = self.names[idx].function_name
+                bogus_names = (
+                "ros::TopicManager::subscribe", "ros::TopicManager::addSubCallback", "message_filters::Connection")
+                if name in (function_name,) + bogus_names:
+                    self.names[idx].function_name = function_name
+                elif function_name in bogus_names:
+                    pass
+                else:
+                    print("Duplicate", function_name, v.function_name)
+
+                # ignore repeated additions, if name was present
+                return
+        self.names.append(fi)
+        self.known_callbacks.add(key)
+
     def handle(self, e):
         fn = self.handler_map.get(e['_name'], None)
         if fn is not None:
@@ -117,11 +155,6 @@ class Mapper(object):
         self.start_call[key] = md.timestamp
         self.start_cycles[key] = get_cycles(e)
 
-    def handle_queue_delay(self, e, md):
-        key = FunctionKey(e)
-        delay = e['_timestamp'] - (float(e['start_time_sec']) + float(e['start_time_nsec'])/1e9)*1e9
-        self.delays.append(DelayInfo(md, e['queue_name'], get_callback(e), delay))
-
     def handle_subscriber_callback_end(self, e, md):
         key = FunctionKey(e)
         if key in self.start_call:
@@ -135,19 +168,33 @@ class Mapper(object):
             del self.start_call[key]
             del self.start_cycles[key]
 
+    def handle_queue_delay(self, e, md):
+        key = FunctionKey(e)
+        delay = e['_timestamp'] - (float(e['start_time_sec']) + float(e['start_time_nsec']) / 1e9) * 1e9
+        self.delays.append(DelayInfo(md, e['queue_name'], get_callback(e), delay))
+
     def handle_timer_scheduled(self, e, md):
         ref = e["callback_queue_cb_ref"]
-        key = FunctionKey(e, ref)
-        self.timer_map[key] = FunctionKey(e)
+        # this is the key that will appear in callback_start
+        call_key = FunctionKey(e, ref)
+        # but this is the key we have in known_callbacks
+        real_key = FunctionKey(e)
+        if real_key not in self.known_callbacks:
+            print("Warning: Timer %s not in known callbacks" % real_key)
+            cb_ref = real_key.callback_ref
+            self._add_fi(e=e, md=md, function_name="timer-auto-%s" % cb_ref, cb_ref=cb_ref,
+                         key=real_key, trigger='time')
+        self.timer_map[call_key] = real_key
 
     def handle_callback_start(self, e, md):
         key = FunctionKey(e)
+        if key in self.timer_map:
+            key = self.timer_map[key]
+            if key not in self.known_callbacks:
+                print("Timer key %s not in known_callbacks on start -- must not happen!" % key)
         # ignore if subscription-related
-        if key in self.queue_keys:
+        elif key in self.queue_keys:
             return 
-        # translate if timer-related
-        if key not in self.known_callbacks:
-            key = self.timer_map.get(key, key)
 
         # handle functions we didn't get name_info for
         if key not in self.known_callbacks:
@@ -160,56 +207,18 @@ class Mapper(object):
         self.start_call[key] = md.timestamp
         self.start_cycles[key] = get_cycles(e)
         
-    def _add_fi(self, e, md, function_name, cb_ref, key):
-        trigger = 'unspecified'
-        if e['_name'] == "roscpp:subscriber_callback_added":
-            trigger = 'data'
-        elif e['_name'] == "roscpp:timer_added":
-            trigger = 'time'
-        
-        #print(e['_name'], trigger)
-        fi = FunctionInfo(md, function_name, cb_ref, trigger)
-        if key in self.known_callbacks:
-            idx = -1
-            try:
-                idx = self.names.index(fi)
-            except ValueError:
-                for i, v in enumerate(self.names):
-                    if v.cb_ref == cb_ref:
-                        idx = i
-                        break
-
-            if idx != -1:
-                if self.names[idx].trigger == 'unspecified':
-                    self.names[idx].trigger = trigger
-                name = self.names[idx].function_name
-                bogus_names = ("ros::TopicManager::subscribe", "ros::TopicManager::addSubCallback", "message_filters::Connection")
-                if name in (function_name, ) + bogus_names: 
-                    self.names[idx].function_name = function_name
-                elif function_name in bogus_names:
-                    pass
-                else:
-                    print("Duplicate", function_name, v.function_name)
-
-                # ignore repeated additions, if name was present
-                return
-        self.names.append(fi)
-        self.known_callbacks.add(key)
-
     def handle_callback_end(self, e, md):
         key = FunctionKey(e)
-        # if subscription-related, just remove the queue key (we're the last call)
-        if key in self.queue_keys:            
+        if key in self.timer_map:
+            key = self.timer_map[key]
+        elif key in self.queue_keys:
             #self.queue_keys.discard(key)
             return
         
         if key not in self.known_callbacks:
-            if key in self.timer_map:
-                key = self.timer_map[key]
-            else:
-                self.missing_keys[key].append(e)
-                #print("Callback %x found neither in known_callbacks nor in timer_map" % key.callback_ref)
-                return
+            self.missing_keys[key].append(e)
+            #print("Callback %x found neither in known_callbacks nor in timer_map" % key.callback_ref)
+            return
         
         try:
             start = self.start_call[key]
@@ -229,7 +238,7 @@ class Mapper(object):
             print("No start time for", e)
     
     def handle_name_info(self, e, md):
-        self._add_fi(e, md, split_function_name(get_m_name(e)), get_callback(e), FunctionKey(e))        
+        self._add_fi(e, md, split_function_name(get_m_name(e)), get_callback(e), FunctionKey(e))
 
     def handle_task_start(self, e, md):
         self.tasks.append(TaskInfo(md, get_t_name(e)))
