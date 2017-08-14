@@ -81,12 +81,14 @@ def ti2pd(ti):
     }, index=runtime_timestamps)
 
     mtrace_timestamps = [pd.Timestamp(t.timestamp) for t in ti.mtrace]
+    task_ids = [t.task_id for t in ti.mtrace]
     mtrace_df = pd.DataFrame(data={
         'timestamp': mtrace_timestamps,
         'message_name': [t.message_name for t in ti.mtrace],
         'callback_ref': [t.callback_ref for t in ti.mtrace],
-        'receipt_time': [pd.Timestamp(t.receipt_time) for t in ti.mtrace]
-    }, index=mtrace_timestamps)
+        'receipt_time': [pd.Timestamp(t.receipt_time) for t in ti.mtrace],
+        'task_id': task_ids
+    }, index=[task_ids, mtrace_timestamps])
 
     delays_timestamps = [pd.Timestamp(t.timestamp) for t in ti.delays]
     delays_df = pd.DataFrame(data={

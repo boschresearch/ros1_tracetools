@@ -38,7 +38,7 @@ class FunctionKey(object):
 
 class Mapper(object):
     def __init__(self):
-        self.start_call = {}
+        self.start_md = {}
         self.start_cycles = {}
 
         self.timer_map = {}
@@ -140,7 +140,7 @@ class Mapper(object):
 
     def create_trace_info(self):
         #print([(key.element['procname'], key.element['callback_ref']) for key in self.not_found])
-        num_unfinished = len(self.start_call)
+        num_unfinished = len(self.start_md)
         if num_unfinished > 0:
             print("%d unfinished invocations ignored" % num_unfinished)
         return TraceInfo(self.names, self.invocations, self.tasks, self.runtime, self.mtrace, self.delays)
@@ -152,20 +152,20 @@ class Mapper(object):
         
     def handle_subscriber_callback_start(self, e, md):
         key = FunctionKey(e)
-        self.start_call[key] = md.timestamp
+        self.start_md[key] = md
         self.start_cycles[key] = get_cycles(e)
 
     def handle_subscriber_callback_end(self, e, md):
         key = FunctionKey(e)
-        if key in self.start_call:
-            start = self.start_call[key]
-            duration = md.timestamp - start
+        if key in self.start_md:
+            start_md = self.start_md[key]
+            duration = md.timestamp - start_md.timestamp
             cycles = get_cycles(e) - self.start_cycles[key]
             trace_id =  get_trace_id(e)
-            self.invocations.append(InvocationInfo(md, get_callback(e), duration, cycles, trace_id))
+            self.invocations.append(InvocationInfo(start_md, get_callback(e), duration, cycles, trace_id))
 
             # cleanup
-            del self.start_call[key]
+            del self.start_md[key]
             del self.start_cycles[key]
 
     def handle_queue_delay(self, e, md):
@@ -204,7 +204,7 @@ class Mapper(object):
             else:
                 pass#self.not_found.add(e)
                 
-        self.start_call[key] = md.timestamp
+        self.start_md[key] = md
         self.start_cycles[key] = get_cycles(e)
         
     def handle_callback_end(self, e, md):
@@ -221,14 +221,14 @@ class Mapper(object):
             return
         
         try:
-            start = self.start_call[key]
-            duration = md.timestamp - start
+            start_md = self.start_md[key]
+            duration = md.timestamp - start_md.timestamp
             cycles = get_cycles(e) - self.start_cycles[key]
             trace_id = get_trace_id(e)
-            self.invocations.append(InvocationInfo(md, key.callback_ref, duration, cycles, trace_id))
+            self.invocations.append(InvocationInfo(start_md, key.callback_ref, duration, cycles, trace_id))
 
             # cleanup
-            del self.start_call[key]
+            del self.start_md[key]
             del self.start_cycles[key]
             try:
                 del self.timer_map[key]
