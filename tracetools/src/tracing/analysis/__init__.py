@@ -32,14 +32,16 @@ def select_invocations(pd_df, fn_selector=lambda _: True):
     """
     cbs = pd.Series(data=[index for index, row in pd_df.functions.\
                             iterrows() if fn_selector(row["function_name"])]).unique()
-    if len(pd_df.actions) > 0:
+    if pd_df.actions is not None and len(pd_df.actions) > 0:
         invs=[]
         for name, a in pd_df.actions.iterrows():
             start = a.starts
             invocations = pd_df.invocations[start:start+a.duration]
             invs.append(pd_df.functions.loc[cbs].merge(invocations, on='callback'))
         return invs
-    return [pd_df.functions.loc[cbs].merge(pd_df.invocations, on='callback')]
+    else:
+        return [pd_df.functions.loc[cbs].merge(pd_df.invocations, on='callback')]
+
 
 def fn_durations(fi_pd, stats=['count', np.sum, np.median, np.std], sort_key=("duration", "sum"), fields=("duration", "cycles")):
     """Compute median and standard deviation of aggregated invocation data."""
