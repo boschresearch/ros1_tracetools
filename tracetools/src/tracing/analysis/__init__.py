@@ -30,8 +30,8 @@ def select_invocations(pd_df, fn_selector=lambda _: True):
     :return: List of dataframes, with either one element or multiple elements, if the input contains
     action intervals (then, one per such interval)
     """
-    cbs = pd.Series(data=[index for index, row in pd_df.functions.\
-                            iterrows() if fn_selector(row["function_name"])]).unique()
+    cbs = pd.Series(data=[index for index, row in pd_df.functions.
+                    iterrows() if fn_selector(row["function_name"])]).unique()
     if pd_df.actions is not None and len(pd_df.actions) > 0:
         invs=[]
         for name, a in pd_df.actions.iterrows():
