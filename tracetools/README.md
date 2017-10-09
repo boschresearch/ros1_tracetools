@@ -23,12 +23,12 @@ Then either call the ros::trace methods directly, or use our modified ros_comm v
 *However*, to actually generate tracing output, you need to 
  
 1. Install LTTNG using (example for Ubuntu)
- 	# sudo apt install liblttng-ust-dev lttng-tools lttng-modules-dkms
+ 	$ sudo apt install liblttng-ust-dev lttng-tools lttng-modules-dkms
 2. Pass WITH_LTTNG (example for catkin tools)
-	# catkin config -DWITH_LTTNG=ON
+	$ catkin config -DWITH_LTTNG=ON
 3. Recompile your workspace
 4. TEST tracing with the included test script
-	# rosrun tracetools tracetools_test
+	$ rosrun tracetools tracetools_test
   In this case, "no news is good news". If a problem occurs, the script will
   let you know.
 5. Invoke your system using the included tracing.experiment module, as 
