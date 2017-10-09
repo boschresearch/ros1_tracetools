@@ -69,7 +69,7 @@ if(WITH_LTTNG)
 endif()
 
 ## Declare a C++ library
-set(TT_SOURCES src/${PROJECT_NAME}/tracing_tools.cpp)
+set(TT_SOURCES src/${PROJECT_NAME}/tracetools.cpp)
 if(WITH_LTTNG)
   set(TT_SOURCES src/${PROJECT_NAME}/tp_call.c ${TT_SOURCES})
 endif()
