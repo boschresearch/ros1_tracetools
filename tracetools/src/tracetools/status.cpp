@@ -3,5 +3,5 @@
 
 int main(int argc, char* argv[])
 {
-    std::cout << (ros::TracingTools::lttng_status() ? "LTTNG enabled" : "LTTNG disabled") << std::endl;
+    std::cout << (ros::trace::compile_status() ? "Tracing enabled" : "Tracing disabled") << std::endl;
 }

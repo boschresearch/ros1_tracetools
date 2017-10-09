@@ -4,7 +4,7 @@
 
 int main(int argc, char* argv[])
 {
-    ros::TracingTools::trace_node_init("tracetools test", ROS_VERSION);
+    ros::trace::node_init("tracetools test", ROS_VERSION);
     
     return 0;
 }
