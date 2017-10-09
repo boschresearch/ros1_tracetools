@@ -1,34 +1,46 @@
-# TRACETOOLS
+# tracetools
+
+The tracetools library is an Open Source project that provides tracing functions
+for  message-passing middleware, specifically ROS.  
+
+## Intended use 
+
+The intended use of this software is for collecting data from robotic systems
+*during development*.
+
+The software is not targeted at use during production and has not been tested
+for this purpose. However, the license conditions of the applicable Open Source
+licenses allow you to adapt the software to your needs. Before using it in a
+safety relevant setting, make sure that the software fulfills your requirements
+and adjust it according to any applicable safety standards. 
+
+## Instructions for use 
+
+This is a regular catkin package and can just be dropped into your workspace as-is.
+
+Then either call the ros::trace methods directly, or use our modified ros_comm version.
+
+*However*, to actually generate tracing output, you need to 
+ 
+1. Install LTTNG using (example for Ubuntu)
+ 	# sudo apt install liblttng-ust-dev lttng-tools lttng-modules-dkms
+2. Pass WITH_LTTNG (example for catkin tools)
+	# catkin config -DWITH_LTTNG=ON
+3. Recompile your workspace
+4. TEST tracing with the included test script
+	# rosrun tracetools tracetools_test
+  In this case, "no news is good news". If a problem occurs, the script will
+  let you know.
+5. Invoke your system using the included tracing.experiment module, as 
+   explained in the documentation. This will configure and start lttng and
+   collect data during the run.
 
 
-Some helpers for tracing component-based systems using LTTng.
+## License 
 
-## CONTENTS
+This package is open-sourced under the Apache-2.0 license. See the 
+[LICENSE](LICENSE) file for details. 
 
- * src/tracetools/ is the C++ support library with functions for user-space tracing
- * src/tracing/ is analysis code using Python3 and Panda
- * scripts/setup*.sh are setup scripts which configure LTTng with the right events
- * scripts/ctf_pickle_pod.py is a converter from Babeltrace format to a pickle of plain-old-dictionaries
- * scripts/example-run-scripts is a simple example of running the whole shebang
-
-
-## INSTALLATION
-
-The package.xml does not list any dependencies by default, because 
- 1. they are not in the official rosdistro, yet
- 1. one of it is a kernel module that only works when CONFIG_TRACING is enabled in the kernel
- 1. also you'd need a PPA for the babeltrace tool on Ubuntu 14.04 right now.
-
-Therefore, you need to manually install them, if you want, and then set the WITH_LTTNG
-option during compilation of this package.
-
-### For LTTng
-
-    sudo apt-add-repository ppa:lttng/ppa
-    sudo apt-get update 
-    sudo apt-get install lttng-tools lttng-modules-dkms babeltrace liblttng-ust-dev python3-babeltrace
-
-### Enable tracetools
-
-`catkin config --cmake-args -DWITH_LTTNG=ON`
+For a list of other open source components included in this package, see the 
+file [3rd-party-licenses.txt](3rd-party-licenses.txt).
 

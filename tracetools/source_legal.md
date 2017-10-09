@@ -12,12 +12,3 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-
-#include <tracetools/tracetools.h>
-#include <iostream>
-
-int main(int argc, char* argv[])
-{
-    std::cout << (ros::trace::compile_status() ? "Tracing enabled" : "Tracing disabled") << std::endl;
-}
