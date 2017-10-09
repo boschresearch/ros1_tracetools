@@ -222,6 +222,12 @@ namespace ros {
         tracepoint(roscpp, publisher_message_queued, topic_arg, buffer_ref_arg);
 #endif
 	}
+	void TracingTools::trace_publisher_message_queued(const std::string& topic_arg,
+										   const void* buffer_ref_arg) {
+#ifdef WITH_LTTNG
+        tracepoint(roscpp, publisher_message_queued, topic_arg.c_str(), buffer_ref_arg);
+#endif
+	}
 	void TracingTools::trace_subscriber_link_message_write(const void* message_ref_arg,
 												const void* channel_ref_arg) {
 #ifdef WITH_LTTNG

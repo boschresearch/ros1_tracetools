@@ -12,6 +12,7 @@
 
 #include <stdint.h>
 #include <boost/shared_ptr.hpp>
+#include <string>
 
 //#include "ros/callback_queue_interface.h"
 
@@ -167,6 +168,8 @@ namespace ros {
 														const void* buffer_ref_arg);
 		/// Trace a message being queue for publishing
 		static void trace_publisher_message_queued(const char* topic_arg,
+												   const void* buffer_ref_arg);
+		static void trace_publisher_message_queued(const std::string& topic_arg,
 												   const void* buffer_ref_arg);
 		/// Trace metadata on a message being written to the socket
 		static void trace_subscriber_link_message_write(const void* message_ref_arg,
