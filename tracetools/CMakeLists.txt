@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tracetools)
 
+add_definitions(-std=c++11)
+
 ## Check if we have catkin
 find_package(catkin REQUIRED COMPONENTS roscpp)
 find_package(PkgConfig REQUIRED)
