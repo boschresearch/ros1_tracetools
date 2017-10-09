@@ -291,6 +291,7 @@ def map_roscpp(pods):
         #if not len(ignored_names) == 0:
         #    print(ignored_names)
 
+    print("Missing callbacks: ", "\n".join(["%s\t%d" % (key, len(value)) for key, value in m.missing_keys.items()]))
     return m.create_trace_info()
 
 

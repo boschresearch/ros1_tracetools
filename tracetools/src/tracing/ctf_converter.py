@@ -8,6 +8,8 @@ __all__ = ['convert']
 LTT_FIELDS = ('timestamp_end', 'stream_id', 'timestamp_begin', 'v', 'cpu_id', 'uuid', 'packet_size', 'magic', 'id',
               'events_discarded')
 
+DISCARD = "events_discarded"
+
 
 def element_to_pod(ctf_element):
     """
@@ -18,6 +20,8 @@ def element_to_pod(ctf_element):
     :return type: dict
     """
     pod = {'_name': ctf_element.name, '_timestamp': ctf_element.timestamp}
+    if hasattr(ctf_element, DISCARD) and ctf_element[DISCARD] > 0:
+        print(ctf_element[DISCARD])
     for key in [key for key in ctf_element.keys() if key not in LTT_FIELDS]:
         pod[key] = ctf_element[key]
     return pod

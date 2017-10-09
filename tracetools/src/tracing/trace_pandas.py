@@ -34,6 +34,9 @@ class TracePD(object):
             left_on="task_id",
             right_on="task_id")
 
+    def __repr__(self):
+        pass
+
 
 def ti2pd(ti):
     """Convert an lttng_model.TraceInfo structure to a Pandas data-frame"""
