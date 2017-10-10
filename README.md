@@ -1,42 +1,46 @@
-# bosch_arch_tracing
+# tracetools
 
-* [About bosch_arch_tracing](#about)
-* [License and Organization](#license)
-* [Maintainers and Contributors](#maintainers)
-* [Build Instructions](#build)
-* [Dependencies on OSS Components](#dependencies)
-* [Continuous Integration](#ci)
+The tracetools library is an Open Source project that provides tracing functions
+for  message-passing middleware, specifically ROS.  
 
+## Intended use 
 
-## <a name="about"/>About bosch_arch_tracing
+The intended use of this software is for collecting data from robotic systems
+*during development*.
 
-Generic tracing interface (with LTTng backend) and analysis tools.
+The software is not targeted at use during production and has not been tested
+for this purpose. However, the license conditions of the applicable Open Source
+licenses allow you to adapt the software to your needs. Before using it in a
+safety relevant setting, make sure that the software fulfills your requirements
+and adjust it according to any applicable safety standards. 
 
-This package *optionally* depends upon LTTng. If you don't specify -DWITH_LTTNG=ON, your project won't actually generate tracing output. In this way, you can remove tracing, just by recompiling tracetools.
+## Instructions for use 
 
+This is a regular catkin package and can just be dropped into your workspace as-is.
 
-For more information, including requirements and LTTng info, also see tracetools/README.md
+Then either call the ros::trace methods directly, or use our modified ros_comm version.
 
-## <a name="license"/>License and Organization
-
-bosch\_arch\_tracing has been by the [RoSe](https://inside-docupedia.bosch.com/confluence/display/ROSE/) project (CR/SP02-002). We use the Apache Public License v2.0 (see LICENSE.txt).
-
-## <a name="maintainers"/>Maintainers and Contributors
-
-Author:
-
-* [Luetkebohle Ingo (CR/AEA2)](https://connect.bosch.com/profiles/html/profileView.do?userid=20CD8DFB-55C3-4B2C-AD68-1C3819E3B831)
+*However*, to actually generate tracing output, you need to 
  
-## <a name="build"/>Build Instructions
+1. Install LTTNG using (example for Ubuntu)
+ 	$ sudo apt install liblttng-ust-dev lttng-tools lttng-modules-dkms
+2. Pass WITH_LTTNG (example for catkin tools)
+	$ catkin config -DWITH_LTTNG=ON
+3. Recompile your workspace
+4. TEST tracing with the included test script
+	$ rosrun tracetools tracetools_test
+  In this case, "no news is good news". If a problem occurs, the script will
+  let you know.
+5. Invoke your system using the included tracing.experiment module, as 
+   explained in the documentation. This will configure and start lttng and
+   collect data during the run.
 
-node\_model uses catkin to build. I strongly recommend [catkin tools](https://catkin-tools.readthedocs.io/en/latest/) but [catkin\_make](http://wiki.ros.org/catkin/commands/catkin_make) should also work.
 
-For executing unit tests simply call `catkin run_tests` from anywhere in the catkin workspace, which will run all tests, or, alternatively, run `catkin build --this --no-deps --catkin-make-args run_tests` in your package directory, which will run your packages tests only.
+## License 
 
-## <a name="dependencies"/>Dependencies on OSS Components
+This package is open-sourced under the Apache-2.0 license. See the 
+[LICENSE](LICENSE) file for details. 
 
-ROS dependencies are listed as usual in the package.xml.
+For a list of other open source components included in this package, see the 
+file [3rd-party-licenses.txt](3rd-party-licenses.txt).
 
-## <a name="ci"/>Continuous Integration
-
-bosch\_arch\_tracing currently has no associated Continuous Integration job, but this should be coming soon.
