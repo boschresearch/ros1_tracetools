@@ -201,6 +201,20 @@ void subscription_message_queued(const char* topic_arg,
 			receipt_time_sec_arg, receipt_time_nsec_arg);
 #endif
 }
+void subscription_message_dropped(const char* topic_arg, 
+			const void* buffer_ref_arg,
+			const void* queue_ref_arg,
+			const void* callback_ref_arg,
+			const void* message_ref_arg,
+			int receipt_time_sec_arg,
+			int receipt_time_nsec_arg)
+{
+#ifdef WITH_LTTNG
+	tracepoint(roscpp, subscription_message_dropped, topic_arg, buffer_ref_arg,
+			queue_ref_arg, callback_ref_arg, message_ref_arg,
+			receipt_time_sec_arg, receipt_time_nsec_arg);
+#endif
+}
 void subscriber_callback_added(const void* queue_ref_arg,
 		const void* callback_ref_arg, const char* type_info_arg,
 		const char* data_type_arg, const char* source_name_arg,

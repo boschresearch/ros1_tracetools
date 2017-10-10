@@ -194,6 +194,13 @@ namespace ros {
 													  const void* message_ref_arg,
 													  int receipt_time_sec_arg,
 													  int receipt_time_nsec_arg);
+		void subscription_message_dropped(const char* topic_arg, 
+			const void* buffer_arg,
+			const void* queue_ref_arg,
+			const void* callback_ref_arg,
+			const void* message_ref_arg,
+			int receipt_time_sec,
+			int receipt_time_nsec);
 
 
 		/** Emit a trace message for a link in a processing chain.
