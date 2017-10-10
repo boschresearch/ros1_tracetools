@@ -1,0 +1,5 @@
+*.svg
+*.png
+*.pdf
+.ipynb_checkpoints
+

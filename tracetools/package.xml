@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>tracetools</name>
+  <version>0.0.1</version>
+  <description>The tracetools package</description>
+
+  <maintainer email="ingo.luetkebohle@de.bosch.com">Ingo Luetkebohle</maintainer>
+  <license>BIOS</license>
+
+
+  <!-- <url type="website">http://wiki.ros.org/tracetools</url> -->
+
+  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+  <author email="ingo.luetkebohle@de.bosch.com">Ingo Luetkebohle</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rostest</build_depend>
+  
+  <!-- this package does not list any dependencies, because most people 
+       don't need tracing, and are just getting this is a dependency of
+       other packages. See the README for more info -->
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

@@ -1,0 +1,3 @@
+<launch>
+    <test test-name="test_script" pkg="tracetools" type="test_experiment.py"/>
+</launch>

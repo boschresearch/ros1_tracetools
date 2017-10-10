@@ -1,0 +1,314 @@
+#include <stdint.h>
+
+TRACEPOINT_EVENT(
+	roscpp,
+	init_node,
+	TP_ARGS(
+		const char*, node_name_arg,
+		int, roscpp_version_arg
+	),
+	TP_FIELDS(
+		ctf_string(node_name, node_name_arg)
+		ctf_integer(int, roscpp_version_compiletime, roscpp_version_arg)
+	)
+)		
+TRACEPOINT_EVENT(
+    roscpp,
+    new_connection,
+    TP_ARGS(
+    	const char*, local_hostport_arg,
+		const char*, remote_hostport_arg,
+		const void*, channel_ref_arg,
+		const char*, channel_type_arg,
+		const char*, name_arg,
+		const char*, data_type_arg
+    ),
+    TP_FIELDS(
+		ctf_string(local_hostport, local_hostport_arg)
+		ctf_string(remote_hostport, remote_hostport_arg)
+		ctf_integer_hex(const void*, channel_ref, channel_ref_arg)
+		ctf_string(channel_type, channel_type_arg)
+		ctf_string(name, name_arg)
+		ctf_string(data_type, data_type_arg)
+    )
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	subscriber_callback_added,
+	TP_ARGS(
+		const void*, queue_ref_arg,
+		const void*, callback_ref_arg,
+		const char*, type_info_arg,
+		const char*, data_type_arg,
+		const char*, source_name_arg,
+		int, queue_size_arg
+	),
+	TP_FIELDS(
+		ctf_integer_hex(const void*, queue_ref, queue_ref_arg)
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+		ctf_string(type_info, type_info_arg)
+		ctf_string(data_type, data_type_arg)
+		ctf_string(source_name, source_name_arg)
+		ctf_integer(int, queue_size, queue_size_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	ptr_name_info,
+	TP_ARGS(
+		const char*, function_name_arg,
+		const void*, callback_ref_arg
+	),
+	TP_FIELDS(
+		ctf_string(function_name, function_name_arg)
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	timer_added,
+	TP_ARGS(
+		const void*, callback_ref_arg,
+		const char*, function_name_arg,
+		const char*, type_info_arg,
+		int, period_sec_arg,
+		int, period_nsec_arg
+	),
+	TP_FIELDS(
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+		ctf_string(function_name, function_name_arg)
+		ctf_string(type_info, type_info_arg)
+		ctf_integer(int, period_sec, period_sec_arg)
+		ctf_integer(int, period_nsec, period_nsec_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	timer_scheduled,
+	TP_ARGS(
+		const void*, callback_queue_cb_ref_arg,
+		const void*, callback_ref_arg		
+	),
+	TP_FIELDS(
+		ctf_integer_hex(const void*, callback_queue_cb_ref, callback_queue_cb_ref_arg)
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	message_processed,
+	TP_ARGS(
+		const char*, message_name_arg,
+		const void*, callback_ref_arg,
+		int, receipt_time_sec_arg,
+		int, receipt_time_nsec_arg
+	),
+	TP_FIELDS(
+		ctf_string(message_name, message_name_arg)
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+		ctf_integer(int, receipt_time_sec, receipt_time_sec_arg)
+		ctf_integer(int, receipt_time_nsec, receipt_time_nsec_arg)
+	)
+)
+TRACEPOINT_EVENT_CLASS(
+	roscpp,
+	subscription_message,
+	TP_ARGS(
+		const char*, topic_arg,
+		const void*, buffer_ref_arg,
+		const void*, queue_ref_arg,
+		const void*, callback_ref_arg,
+		const void*, message_ref_arg,
+		int, receipt_time_sec_arg,
+		int, receipt_time_nsec_arg		
+	),
+	TP_FIELDS(
+		ctf_string(topic, topic_arg)
+		ctf_integer_hex(const void*, buffer_ref, buffer_ref_arg)
+		ctf_integer_hex(const void*, queue_ref, queue_ref_arg)
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+		ctf_integer_hex(const void*, message_ref, message_ref_arg)
+		ctf_integer(int, receipt_time_sec, receipt_time_sec_arg)
+		ctf_integer(int, receipt_time_nsec, receipt_time_nsec_arg)
+	)
+)
+TRACEPOINT_EVENT_INSTANCE(
+	roscpp,
+	subscription_message,
+	subscription_message_queued,
+	TP_ARGS(
+		const char*, topic_arg,
+		const void*, buffer_ref_arg,
+		const void*, queue_ref_arg,
+		const void*, callback_ref_arg,
+		const void*, message_ref_arg,
+		int, receipt_time_sec_arg,
+		int, receipt_time_nsec_arg		
+	)
+)
+TRACEPOINT_EVENT_INSTANCE(
+	roscpp,
+	subscription_message,
+	subscription_message_dropped,
+	TP_ARGS(
+		const char*, topic_arg,
+		const void*, buffer_ref_arg,
+		const void*, queue_ref_arg,
+		const void*, callback_ref_arg,
+		const void*, message_ref_arg,
+		int, receipt_time_sec_arg,
+		int, receipt_time_nsec_arg		
+	)
+)
+TRACEPOINT_EVENT_INSTANCE(
+	roscpp,
+	subscription_message,
+	subscriber_callback_start,
+	TP_ARGS(
+		const char*, topic_arg,
+		const void*, buffer_ref_arg,
+		const void*, queue_ref_arg,
+		const void*, callback_ref_arg,
+		const void*, message_ref_arg,
+		int, receipt_time_sec_arg,
+		int, receipt_time_nsec_arg		
+	)
+)
+TRACEPOINT_EVENT_INSTANCE(
+	roscpp,
+	subscription_message,
+	subscriber_callback_end,
+	TP_ARGS(
+		const char*, topic_arg,
+		const void*, buffer_ref_arg,
+		const void*, queue_ref_arg,
+		const void*, callback_ref_arg,
+		const void*, message_ref_arg,
+		int, receipt_time_sec_arg,
+		int, receipt_time_nsec_arg
+	)
+)
+TRACEPOINT_EVENT(
+    roscpp,
+    callback_start,
+    TP_ARGS(
+        const void*, callback_ref_arg,
+        const void*, data_ref_arg,
+        const uint64_t, tracing_id_arg
+    ),
+    TP_FIELDS(
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+		ctf_integer_hex(const void*, data_ref, data_ref_arg)
+		ctf_integer(const uint64_t, tracing_id, tracing_id_arg)
+    )
+)
+TRACEPOINT_EVENT(
+    roscpp,
+    queue_delay,
+    TP_ARGS(
+        const char*, queue_name_arg,
+        const void*, callback_ref_arg,
+        const void*, data_ref_arg,
+        const uint32_t, entry_time_sec_arg,
+        const uint32_t, entry_time_nsec_arg
+    ),
+    TP_FIELDS(
+        ctf_string(queue_name, queue_name_arg)
+        ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+        ctf_integer_hex(const void*, data_ref, data_ref_arg)
+        ctf_integer(uint32_t, start_time_sec, entry_time_sec_arg)
+        ctf_integer(uint32_t, start_time_nsec, entry_time_nsec_arg) 
+    )
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	callback_end,
+	TP_ARGS(
+		const void*, callback_ref_arg,
+		const void*, data_ref_arg,
+        const uint64_t, tracing_id_arg		
+	),
+	TP_FIELDS(
+		ctf_integer_hex(const void*, callback_ref, callback_ref_arg)
+		ctf_integer_hex(const void*, data_ref, data_ref_arg)
+		ctf_integer(const uint64_t, tracing_id, tracing_id_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	publisher_link_handle_message,
+	TP_ARGS(
+			const void*, channel_ref_arg,
+			const void*, buffer_ref_arg
+	),
+	TP_FIELDS(
+		ctf_integer_hex(const void*, channel_ref, channel_ref_arg)
+		ctf_integer_hex(const void*, buffer_ref, buffer_ref_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	publisher_message_queued,
+	TP_ARGS(
+			const char*, topic_arg,
+			const void*, buffer_ref_arg
+	),
+	TP_FIELDS(
+		ctf_string(topic, topic_arg)
+		ctf_integer_hex(const void*, buffer_ref, buffer_ref_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	subscriber_link_message_write,
+	TP_ARGS(
+			const void*, message_ref_arg,
+			const void*, channel_ref_arg
+	),
+	TP_FIELDS(
+		ctf_integer_hex(const void*, message_ref, message_ref_arg)
+		ctf_integer_hex(const void*, channel_ref, channel_ref_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	subscriber_link_message_dropped,
+	TP_ARGS(
+			const void*, message_ref_arg
+	),
+	TP_FIELDS(
+		ctf_integer_hex(const void*, message_ref, message_ref_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	task_start,
+	TP_ARGS(
+		const char*, task_name_arg
+	),
+	TP_FIELDS(
+		ctf_string(task_name, task_name_arg)
+	)
+)
+TRACEPOINT_EVENT(
+	roscpp,
+	trace_link,
+	TP_ARGS(
+	    const char*, element_name_arg,
+	    const char*, caller_name_arg,
+		const void*, caller_ref_arg,
+		const void*, in_data_ref_arg,
+		const void*, out_data_ref_arg,
+		const uint64_t, trace_id_arg,
+		const char*, backtrace_arg
+	),
+	TP_FIELDS(
+		ctf_string(element_name, element_name_arg)
+		ctf_string(caller_name, caller_name_arg)
+		ctf_integer_hex(const void*, caller_ref, caller_ref_arg)
+		ctf_integer_hex(const void*, in_data_ref, in_data_ref_arg)
+		ctf_integer_hex(const void*, out_data_ref, out_data_ref_arg)
+		ctf_integer(uint64_t, trace_id, trace_id_arg)
+		ctf_string(backtrace, backtrace_arg)
+	)
+)
