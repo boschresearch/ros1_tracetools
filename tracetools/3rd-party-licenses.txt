@@ -1,0 +1,3 @@
+As of now, this repository does not include 3rd party code with
+distinct licenses.
+

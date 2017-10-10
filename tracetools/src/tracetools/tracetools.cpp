@@ -85,7 +85,7 @@ void message_processed(const char* message_name, const void* callback_ref,
 }
 
 
-void name_info(const void* const_ptr, const void* ptr) {
+void fn_name_info(const void* const_ptr, const void* ptr) {
 #ifdef WITH_LTTNG
 	void* func_ptr = const_cast<void*>(const_ptr);
 	char** symbols = backtrace_symbols(&func_ptr, 1);
@@ -125,7 +125,7 @@ void time_sleep(const void* callback_ref, int sleep_sec, int sleep_nsec) {
 #endif
 }
 
-void trace_callback_wrapper(void* func_ptr,
+void callback_wrapper(void* func_ptr,
 		const SubscriptionCallbackHelperPtr& helper) {
 #ifdef WITH_LTTNG
 	tracepoint(roscpp, ptr_name_info, impl::get_symbol(func_ptr).c_str(),
@@ -133,7 +133,7 @@ void trace_callback_wrapper(void* func_ptr,
 #endif
 }
 
-void trace_link(const char* element_name, const void* caller_ref,
+void link_step(const char* element_name, const void* caller_ref,
 		const void* in_data_ref, const void* out_data_ref,
 		const uint64_t trace_id) {
 #ifdef WITH_LTTNG

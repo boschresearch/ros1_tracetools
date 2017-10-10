@@ -94,7 +94,7 @@ namespace ros {
 		 * @param data Function argument, if any. May be NULL.
 		 * @param trace_id A unique id for this call. Could be a sequence number.
 		 *
-		 * @see trace_callback_wrapper
+		 * @see ros::trace::callback_wrapper
 		 * @see trace_call_end
 		 */
 		void call_start(const void* ptr_ref, const void* data,
