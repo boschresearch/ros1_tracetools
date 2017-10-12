@@ -1,5 +1,6 @@
-// Copyright (c) 2016, 2017 - for information on the respective copyright owner
-// see the NOTICE file and/or the repository https://github.com/bosch-ros-pkg/tracetools.git
+// Copyright (c) 2016, 2017 - for information on the respective 
+// copyright owner see the NOTICE file and/or the repository 
+// https://github.com/bosch-robotics-cr/tracetools.git
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
