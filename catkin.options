@@ -1,0 +1,2 @@
+--cmake-args -DWITH_LTTNG=ON
+
