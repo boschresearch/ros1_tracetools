@@ -1,0 +1,4 @@
+- git:
+    local-name: tracetools
+    uri: https://github.com/bosch-robotics-cr/tracetools.git
+
