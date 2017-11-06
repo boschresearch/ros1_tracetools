@@ -22,7 +22,6 @@
 #include <execinfo.h>
 #include <sstream>
 #include <sys/prctl.h>
-//#include "ros/callback_queue_interface.h"
 
 namespace ros {
 namespace trace {
@@ -123,14 +122,6 @@ void timer_scheduled(const void* callback_ref, const void* timer_ref) {
 void time_sleep(const void* callback_ref, int sleep_sec, int sleep_nsec) {
 #ifdef WITH_LTTNG
 	tracepoint(roscpp, time_sleep, callback_ref, sleep_sec, sleep_nsec);
-#endif
-}
-
-void callback_wrapper_impl(void* func_ptr,
-		const SubscriptionCallbackHelperPtr& helper) {
-#ifdef WITH_LTTNG
-	tracepoint(roscpp, ptr_name_info, impl::get_symbol(func_ptr).c_str(),
-			helper.get());
 #endif
 }
 

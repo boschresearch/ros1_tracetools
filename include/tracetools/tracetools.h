@@ -18,12 +18,6 @@
 //#include "ros/callback_queue_interface.h"
 
 namespace ros {
-	// forward declaration of a ros helper class
-	class SubscriptionCallbackHelper;
-	class CallbackInterface;
-	typedef class boost::shared_ptr<ros::CallbackInterface> CallbackInterfacePtr;
-	typedef boost::shared_ptr<SubscriptionCallbackHelper> SubscriptionCallbackHelperPtr;
-
 	namespace trace {
 		/// report whether tracing is compiled in
 		bool compile_status() throw();
