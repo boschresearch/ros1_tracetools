@@ -11,6 +11,7 @@
 #define __TRACETOOLS_TRACETOOLS_H_
 
 #include <stdint.h>
+#include <typeinfo>
 #include <boost/shared_ptr.hpp>
 #include <string>
 
@@ -45,12 +46,14 @@ namespace ros {
 		void fn_name_info(const void* fun_ptr, const void* ref);
 
 		/**
-		 * Traces the function pointer, the name of the function it points
-		 * to, and the helper that will be used to call it.
+		 * Legacy compatibility function for above which takes a wrapper 
+		 * function directly.
 		 */
+		template<typename T>
 		void callback_wrapper(void* func_ptr,
-				const SubscriptionCallbackHelperPtr& helper);
-
+				const boost::shared_ptr<T>& helper) {
+			fn_name_info(func_ptr, helper.get());
+		}
 
 		/*** Trace methods for callback queue processing */
 
@@ -224,10 +227,18 @@ namespace ros {
 		// some helpers, not for public consumption
 		namespace impl {
 			/// get the function being pointed to by the CallbackInterfacePtr
-			const void* getCallbackFunction(const CallbackInterfacePtr& cb);
+			template<typename T>
+			const void* getCallbackFunction(const boost::shared_ptr<T>& cb) {
+				return cb.get();
+			}
+			
 			/// try to get a name for the function inside the CallbackInterfacePtr
-			std::string getCallbackInfo(const CallbackInterfacePtr& cb);
-
+			std::string getCallbackInfo(const void* func_ptr, const char* name);
+			
+			template<typename T>
+			std::string getCallbackInfo(const boost::shared_ptr<T>& cb) {
+				return getCallbackInfo(cb.get(), typeid(*cb).name());
+			}
 			std::string get_backtrace(int index = -1);
 			std::string get_symbol(void* funptr);
 		}

@@ -1,14 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tracetools)
 
-add_definitions(-std=c++11)
-
 ## Check if we have catkin
-find_package(catkin REQUIRED COMPONENTS roscpp)
+find_package(catkin REQUIRED)
 find_package(PkgConfig REQUIRED)
 
-## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+## need boost shared_ptr
+find_package(Boost REQUIRED)
 
 option(WITH_LTTNG "Include support for tracing with LTTng" OFF)
 if(WITH_LTTNG)
@@ -75,7 +73,6 @@ if(WITH_LTTNG)
 endif()
 
 add_library(${PROJECT_NAME} ${TT_SOURCES})
-# we do NOT want to link against catkin_LIBRARIES, those are only for tests
 target_link_libraries(${PROJECT_NAME})
 if(WITH_LTTNG)
 	target_link_libraries(${PROJECT_NAME} ${LTTNG_LIBRARIES})
@@ -122,7 +119,7 @@ install(PROGRAMS
 )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_status ${PROJECT_NAME}_test
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

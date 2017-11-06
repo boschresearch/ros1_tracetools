@@ -22,7 +22,7 @@
 #include <execinfo.h>
 #include <sstream>
 #include <sys/prctl.h>
-#include "ros/callback_queue_interface.h"
+//#include "ros/callback_queue_interface.h"
 
 namespace ros {
 namespace trace {
@@ -126,7 +126,7 @@ void time_sleep(const void* callback_ref, int sleep_sec, int sleep_nsec) {
 #endif
 }
 
-void callback_wrapper(void* func_ptr,
+void callback_wrapper_impl(void* func_ptr,
 		const SubscriptionCallbackHelperPtr& helper) {
 #ifdef WITH_LTTNG
 	tracepoint(roscpp, ptr_name_info, impl::get_symbol(func_ptr).c_str(),
@@ -293,21 +293,13 @@ std::string get_symbol(void* funptr) {
 	return "";
 #endif
 }
-const void* getCallbackFunction(const CallbackInterfacePtr& cb) {
+std::string getCallbackInfo(const void* func_ptr, const char* name) {
 #ifdef WITH_LTTNG
-	return cb.get();
-#else
-	return NULL;
-#endif
-}
-
-std::string getCallbackInfo(const CallbackInterfacePtr& cb) {
-#ifdef WITH_LTTNG
-	void* funptr = const_cast<void*>(getCallbackFunction(cb));
+	void* funptr = const_cast<void*>(func_ptr);
 	char** symbols = backtrace_symbols(&funptr, 1);
 	std::string result(symbols[0]);
 	free(symbols);
-	return typeid(*cb).name() + std::string(" ") + result;
+	return name + std::string(" ") + result;
 #else
 	return "";
 #endif

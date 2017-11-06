@@ -14,14 +14,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-#include <ros/ros.h>
 #include <tracetools/tracetools.h>
 #include <iostream>
 
 int main(int argc, char* argv[])
 {
-    ros::trace::node_init("tracetools test", ROS_VERSION);
+    ros::trace::node_init("tracetools test", 1);
     
     return 0;
 }
