@@ -34,11 +34,6 @@ if(WITH_LTTNG)
 endif()
 
 
-## Uncomment this if the package has a setup.py. This macro ensures
-## modules and global scripts declared therein get installed
-## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-catkin_python_setup()
-
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -114,7 +109,7 @@ target_link_libraries(${PROJECT_NAME}_test
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 install(PROGRAMS
-  scripts/ctf_pickle_pod.py scripts/setup-lttng-roscpp.sh
+  scripts/setup-lttng-roscpp.sh
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
