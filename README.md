@@ -1,7 +1,7 @@
 # tracetools
 
-The tracetools library is an Open Source project that provides tracing functions
-for  message-passing middleware, specifically ROS.  
+The tracetools library is an Open Source project that provides tracing 
+functions for message-passing middleware, specifically ROS.  
 
 ## Intended use 
 
@@ -31,10 +31,18 @@ Then either call the ros::trace methods directly, or use our modified ros_comm v
 	$ rosrun tracetools tracetools_test
   In this case, "no news is good news". If a problem occurs, the script will
   let you know.
-5. Invoke your system using the included tracing.experiment module, as 
-   explained in the documentation. This will configure and start lttng and
-   collect data during the run.
+  
 
+At runtime, LTTng is not active by default (so you can leave it in
+your programs with no impact). To collect trace data, you need to
+start an LTTng session. In this package, in 
+scripts/setup-lttng-roscpp.sh, a simple configuration script is 
+included.
+
+For even easier usage, with automatic data conversion, check out the
+[https://github.com/bosch-robotics-cr/tracetools_analysis](tracetools_analysis)
+package. It provides a Python API for easy definition, execution and
+analysis of tracing experiments.
 
 ## License 
 
