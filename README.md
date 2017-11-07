@@ -36,11 +36,11 @@ Then either call the ros::trace methods directly, or use our modified ros_comm v
 At runtime, LTTng is not active by default (so you can leave it in
 your programs with no impact). To collect trace data, you need to
 start an LTTng session. In this package, in 
-scripts/setup-lttng-roscpp.sh, a simple configuration script is 
-included.
+[setup-lttng-roscpp.sh](scripts/setup-lttng-roscpp.sh), a simple 
+configuration script is included.
 
 For even easier usage, with automatic data conversion, check out the
-[https://github.com/bosch-robotics-cr/tracetools_analysis](tracetools_analysis)
+[tracetools_analysis](https://github.com/bosch-robotics-cr/tracetools_analysis)
 package. It provides a Python API for easy definition, execution and
 analysis of tracing experiments.
 
