@@ -6,3 +6,4 @@
 
 .vscode
 *.gch
+compile_commands.json
