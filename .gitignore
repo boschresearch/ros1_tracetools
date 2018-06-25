@@ -4,3 +4,5 @@
 *~
 *.pyc
 
+.vscode
+*.gch
