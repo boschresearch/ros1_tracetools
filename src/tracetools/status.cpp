@@ -1,5 +1,5 @@
-// Copyright (c) 2016, 2017 - for information on the respective 
-// copyright owner see the NOTICE file and/or the repository 
+// Copyright (c) 2016, 2017 - for information on the respective
+// copyright owner see the NOTICE file and/or the repository
 // https://github.com/bosch-robotics-cr/tracetools.git
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,8 @@
 #include <tracetools/tracetools.h>
 #include <iostream>
 
-int main(int argc, char* argv[])
+int main(int, char**)
 {
-    std::cout << (ros::trace::compile_status() ? "Tracing enabled" : "Tracing disabled") << std::endl;
+  std::cout << (ros::trace::compile_status() ? "Tracing enabled" :
+  "Tracing disabled") << std::endl;
 }
