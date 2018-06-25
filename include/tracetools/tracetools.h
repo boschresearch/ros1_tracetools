@@ -12,6 +12,7 @@
 #define __TRACETOOLS_TRACETOOLS_H_
 
 #include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 #include <stdint.h>
 #include <string>
 #include <typeinfo>
@@ -20,6 +21,15 @@
 
 namespace ros {
 namespace trace {
+  template<class P>
+  const void* get_ptr(const boost::function<void (P)>& func_ptr) {
+#if BOOST_VERSION <= 106500
+    return reinterpret_cast<void*>(func_ptr.functor.func_ptr);
+#else
+    return reinterpret_cast<void*>(func_ptr.functor.members.func_ptr);
+#endif
+  }
+
 /// report whether tracing is compiled in
 bool compile_status() throw();
 
@@ -33,7 +43,6 @@ void node_init(const char *node_name, unsigned int roscpp_version);
 
 void timer_added(const void *fun_ptr, const char *type_info, int period_sec,
                  int period_nsec);
-
 /**
  * Emit tracing information linking the function ptr's name to the
  * given reference pointer.
@@ -45,7 +54,7 @@ void fn_name_info(const void *fun_ptr, const void *ref);
  * function directly.
  */
 template <typename T>
-void callback_wrapper(void *func_ptr, const boost::shared_ptr<T> &helper) {
+void callback_wrapper(const void *func_ptr, const boost::shared_ptr<T> &helper) {
   fn_name_info(func_ptr, helper.get());
 }
 
@@ -199,7 +208,7 @@ void subscription_message_dropped(const char *topic_arg, const void *buffer_arg,
                  *   association with the succeeding link
                  * @param trace_id an optional id for distinguishing different
  * traces
-                 *   where the data ref's are the same
+                 *   where the data refcallback_wrapper's are the same
                  * */
 void link_step(const char *element_name, const void *caller_name,
                const void *in_data_ref, const void *out_data_ref,
