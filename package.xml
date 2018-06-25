@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>tracetools</name>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <description>Wrapper interface for tracing libraries</description>
 
   <author email="ingo.luetkebohle@de.bosch.com">Ingo Luetkebohle</author>
@@ -12,10 +12,10 @@
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>pkg-config</buildtool_depend>
   <build_depend>boost</build_depend>
-  
+
   <test_depend>rosbash</test_depend>
-  
-  <!-- this package does not list LTTng dependencies, because most people 
+
+  <!-- this package does not list LTTng dependencies, because most people
        don't need tracing, and are just getting this is a dependency of
        other packages. See the README.md for more info on what
        you need to install if you really want to use it. -->
