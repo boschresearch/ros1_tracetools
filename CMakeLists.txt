@@ -20,14 +20,14 @@ endif()
 
 # evaluate tracepoint definitions
 if(WITH_LTTNG)
-	add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.c 
+	add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.c
 		COMMAND lttng-gen-tp tp_call.tp -o ../src/${PROJECT_NAME}/tp_call.c -o ../src/${PROJECT_NAME}/tp_call.h
 #		COMMAND mv tp_call.c tp_call.h ${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}/
 		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/lttng
 		DEPENDS ${PROJECT_SOURCE_DIR}/lttng/tp_call.tp
 )
-	set(LTTNG_GENERATED 
-		${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.h 
+	set(LTTNG_GENERATED
+		${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.h
 		${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}/tp_call.c
 	)
 	message(STATUS ${LTTNG_GENERATED})
@@ -139,7 +139,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 #############
 
 if(CATKIN_ENABLE_TESTING)
-  #
+  add_executable(test_get_ptr test/test_get_ptr.cpp)
 endif()
 
 # test LTTNG works

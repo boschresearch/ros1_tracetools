@@ -13,6 +13,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
+#include <boost/version.hpp>
 #include <stdint.h>
 #include <string>
 #include <typeinfo>
