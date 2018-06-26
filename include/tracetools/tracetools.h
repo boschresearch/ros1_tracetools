@@ -24,7 +24,7 @@ namespace ros {
 namespace trace {
   template<class P>
   const void* get_ptr(const boost::function<void (P)>& func_ptr) {
-#if BOOST_VERSION <= 106200
+#if BOOST_VERSION < 106200
     return reinterpret_cast<void*>(func_ptr.functor.func_ptr);
 #else
     return reinterpret_cast<void*>(func_ptr.functor.members.func_ptr);
