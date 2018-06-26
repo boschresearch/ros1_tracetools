@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>tracetools</name>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
   <description>Wrapper interface for tracing libraries</description>
 
   <author email="ingo.luetkebohle@de.bosch.com">Ingo Luetkebohle</author>
